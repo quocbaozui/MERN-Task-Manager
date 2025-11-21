@@ -1,4 +1,3 @@
-const { use } = require("react");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
@@ -44,10 +43,8 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
-
     if (user && (await user.matchPassword(password))) {
       const token = generateToken(user._id);
       res.cookie("token", token, {
@@ -55,8 +52,7 @@ exports.loginUser = async (req, res) => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 3600000,
       });
-
-      res.json({ id: user._id, username: user.username, email: user.email });
+      res.json({ id: user.id, email: user.email, username: user.username });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
     }

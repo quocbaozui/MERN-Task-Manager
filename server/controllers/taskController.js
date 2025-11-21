@@ -17,6 +17,7 @@ exports.createTask = async (req, res) => {
   }
   try {
     const task = await Task.create({ user: req.user._id, title, description });
+    res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ message: error.message });
     console.log("Error in createTask");
