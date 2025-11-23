@@ -18,14 +18,13 @@ const App = () => {
 
       <div className="container mx-auto p-4">
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
-
-          <Route path="/" element={<Home />} />
         </Routes>
       </div>
     </div>

@@ -1,5 +1,4 @@
-// 1. Sửa import: Dùng require thay vì import
-const ratelimit = require("../config/upstash.js");
+import ratelimit from "../config/upstash.js";
 
 const rateLimiter = async (req, res, next) => {
   try {
@@ -18,5 +17,4 @@ const rateLimiter = async (req, res, next) => {
   }
 };
 
-// 2. Sửa export: Dùng module.exports thay vì export default
-module.exports = rateLimiter;
+export default rateLimiter;

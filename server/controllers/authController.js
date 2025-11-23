@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -7,7 +7,7 @@ const generateToken = (id) => {
   });
 };
 
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   try {
     // tìm user trong db với email
@@ -41,7 +41,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -61,12 +61,12 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-exports.logoutUser = (req, res) => {
+export const logoutUser = (req, res) => {
   res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-exports.getUserProfile = async (req, res) => {
+export const getUserProfile = async (req, res) => {
   try {
     // req.user._id => kết quả của Auth Middleware
     // select(-password) lấy tất cả các thông tin trừ password

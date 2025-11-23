@@ -1,42 +1,50 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const helmet = require("helmet");
-const cookieParse = require("cookie-parser");
-const cors = require("cors");
+import express from "express";
+import dotenv from "dotenv";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
 
-const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
-const taskRoutes = require("./routes/taskRoutes");
-const { notFound, errorHandle } = require("./middlewares/errorMiddleware");
-const rateLimiter = require("./middlewares/rateLimiter");
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
+import { notFound, errorHandle } from "./middlewares/errorMiddleware.js";
+import rateLimiter from "./middlewares/rateLimiter.js";
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
+
 app.use(rateLimiter);
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+if (process.env.NODE_ENV !== "production") {
+  app.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+    })
+  );
+}
 
 app.use(helmet());
 app.use(express.json());
-app.use(cookieParse());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-app.get("/", (req, res) => {
-  res.send("MERN Task Manager API is running !");
-});
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client", "dist", "index.html"));
+  });
+}
 
 app.use(notFound);
 app.use(errorHandle);
-
-const PORT = process.env.PORT || 5001;
 
 connectDB().then(() => {
   app.listen(PORT, () => {

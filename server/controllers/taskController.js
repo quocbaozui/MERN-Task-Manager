@@ -1,6 +1,6 @@
-const Task = require("../models/Task");
+import Task from "../models/Task.js";
 
-exports.getTasks = async (req, res) => {
+export const getTasks = async (req, res) => {
   try {
     const tasks = await Task.find({ user: req.user._id });
     res.status(200).json(tasks);
@@ -10,7 +10,7 @@ exports.getTasks = async (req, res) => {
   }
 };
 
-exports.createTask = async (req, res) => {
+export const createTask = async (req, res) => {
   const { title, description } = req.body;
   if (!title) {
     return res.status(400).json({ message: "Please add a title" });
@@ -24,7 +24,7 @@ exports.createTask = async (req, res) => {
   }
 };
 
-exports.updateTask = async (req, res) => {
+export const updateTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
@@ -45,7 +45,7 @@ exports.updateTask = async (req, res) => {
   }
 };
 
-exports.deleteTask = async (req, res) => {
+export const deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
